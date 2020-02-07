@@ -2,9 +2,10 @@ import styled from 'styled-components';
 
 
 export const Canvas = styled.canvas`
-  background-image: url(${props => props.background});
+  /* background-image: url(${props => props.background});
   background-position: 5% 5%;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
+  
 `
 
 export const App = styled.div`

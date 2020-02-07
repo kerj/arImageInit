@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as Styled from './styles/App.styles'
 import year from './imgs/2020.svg';
 import Camera from './Camera';
@@ -9,30 +9,51 @@ function App() {
   const [globalState, globalActions] = useGlobal();
   const canvas = useRef();
   const image = useRef();
+  const picFromCamera = useRef(globalState.photo);
+  const [editedPhoto, setEditedPhoto] = useState();
+
 
   useEffect(() => {
+
     const ctx = canvas.current.getContext('2d')
-    image.current.onload = () => {
-      ctx.drawImage(image.current, 80,120, 200, 220)
-      ctx.font = "20px Courier bold"
-      ctx.fillStyle = "white"
-      ctx.fillText("Happy New Year", 100, 100)
+    picFromCamera.current.onload = () => {
+      ctx.drawImage(picFromCamera.current, 0, 0)
+      ctx.drawImage(image.current, 80, 120, 180, 240)
     }
-  }, [canvas])
+  }, [globalState.photo])
+
+  useEffect(() => {
+    if (globalState.photo === null) return
+    setEditedPhoto(canvas.current.toDataURL('image/png'));
+    globalActions.getEditedPhoto(editedPhoto);
+  }, [globalState.photo])
+
+
+  function DownloadCanvasAsImage() {
+    let downloadLink = document.createElement('a');
+    downloadLink.setAttribute('download', 'CanvasAsImage.png');
+    let canvas = document.getElementById('myCanvas');
+    canvas.toBlob(function (blob) {
+      let url = URL.createObjectURL(blob);
+      downloadLink.setAttribute('href', url);
+      downloadLink.click();
+    });
+  }
 
   return (
     <>
-      <Camera>
+      <Camera download={DownloadCanvasAsImage}>
       </Camera>
       <Styled.Canvas
-        background={globalState.photo}
+        id='myCanvas'
         height={480}
         width={640}
+        background={year}
         ref={canvas}
       >
-
       </Styled.Canvas>
       <Styled.HiddenImg src={year} alt="logo" ref={image} />
+      <Styled.HiddenImg src={globalState.photo} ref={picFromCamera} />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import CameraEle from 'react-webcam'
 
 export const Snapshot = styled.button`
     border-radius: 50%;
@@ -24,5 +25,18 @@ export const Snapshot = styled.button`
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     transition: all 0.3s;
+`
 
+export const Camera = styled(CameraEle)`
+
+`
+
+export const Sticker = styled.svg`
+    background-image: url(${props => props.background});
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    width: 195px;
+    margin-left: -34.5em;
+    margin-top: 7.3em;
 `

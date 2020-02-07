@@ -1,9 +1,9 @@
-import React, { useRef, useCallback } from 'react'
-import CameraEle from 'react-webcam'
+import React, { useRef, useCallback, useEffect } from 'react'
 import useGlobal from './store'
+import year from './imgs/2020.svg';
 import * as Styled from './styles/Camera.styles'
 
-export const Camera = () => {
+export const Camera = ({download}) => {
   const [globalState, globalActions] = useGlobal();
   const camRef = useRef(null)
 
@@ -16,16 +16,28 @@ export const Camera = () => {
     facingMode: "user",
   };
 
+  useEffect(() => {
+    if (camRef.current) return
+    const previewCanvas = document.getElementById('preview')
+    camRef.current.onload = () => {
+      setInterval(() => {
+        previewCanvas.drawImage(camRef.current, 0, 0, 260, 125)
+      }, 20);
+    }
+  }, [camRef])
 
   return (
     <>
-      <CameraEle
+      <Styled.Camera
+        id='hiddenPreview'
         audio={false}
         ref={camRef}
         videoConstraints={videoConstraints}
       >
-      </CameraEle>
-      <Styled.Snapshot onClick={capture}> Take Photo</Styled.Snapshot>
+      </Styled.Camera>
+      <Styled.Sticker id='sticker' background={year}></Styled.Sticker>
+      <Styled.Snapshot onClick={capture}>Take Photo</Styled.Snapshot>
+      <Styled.Snapshot onClick={download}>Download</Styled.Snapshot>
     </>
   )
 }
