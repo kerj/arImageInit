@@ -31,12 +31,11 @@ export const Camera = styled(CameraEle)`
 
 `
 
-export const Sticker = styled.svg`
-    background-image: url(${props => props.background});
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: absolute;
-    width: 195px;
-    margin-left: -34.5em;
-    margin-top: 7.3em;
+export const Sticker = styled.img`
+    position: relative;
+    height: 29em;
+    width: 173px;
+    margin-left: 22%;
+    margin-top: -157%;
+    z-index: 1000;
 `

@@ -3,7 +3,7 @@ import useGlobal from './store'
 import year from './imgs/2020.svg';
 import * as Styled from './styles/Camera.styles'
 
-export const Camera = ({download}) => {
+export const Camera = ({ download }) => {
   const [globalState, globalActions] = useGlobal();
   const camRef = useRef(null)
 
@@ -35,7 +35,7 @@ export const Camera = ({download}) => {
         videoConstraints={videoConstraints}
       >
       </Styled.Camera>
-      <Styled.Sticker id='sticker' background={year}></Styled.Sticker>
+      <Styled.Sticker src={year} id='sticker'></Styled.Sticker>
       <Styled.Snapshot onClick={capture}>Take Photo</Styled.Snapshot>
       <Styled.Snapshot onClick={download}>Download</Styled.Snapshot>
     </>
