@@ -1,6 +1,7 @@
 import React, { useRef, useCallback } from 'react'
 import CameraEle from 'react-webcam'
 import useGlobal from './store'
+import * as Styled from './styles/Camera.styles'
 
 export const Camera = () => {
   const [globalState, globalActions] = useGlobal();
@@ -24,7 +25,7 @@ export const Camera = () => {
         videoConstraints={videoConstraints}
       >
       </CameraEle>
-      <button onClick={capture}> Take Photo</button>
+      <Styled.Snapshot onClick={capture}> Take Photo</Styled.Snapshot>
     </>
   )
 }
