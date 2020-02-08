@@ -5,7 +5,6 @@ import * as actions from "../actions";
 
 const initialState = {
   photo: null,
-  editedPhoto: null,
 }
 
 const useGlobal = useGlobalHook(React, initialState, actions);

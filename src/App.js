@@ -8,26 +8,18 @@ import './App.css';
 function App() {
   const [globalState, globalActions] = useGlobal();
   const canvas = useRef();
+  // change the image will change the sticker the users sees!
   const image = useRef();
   const picFromCamera = useRef(globalState.photo);
-  const [editedPhoto, setEditedPhoto] = useState();
 
 
   useEffect(() => {
-
     const ctx = canvas.current.getContext('2d')
     picFromCamera.current.onload = () => {
       ctx.drawImage(picFromCamera.current, 0, 0)
       ctx.drawImage(image.current, 80, 120, 180, 240)
     }
   }, [globalState.photo])
-
-  useEffect(() => {
-    if (globalState.photo === null) return
-    setEditedPhoto(canvas.current.toDataURL('image/png'));
-    globalActions.getEditedPhoto(editedPhoto);
-  }, [globalState.photo])
-
 
   function DownloadCanvasAsImage() {
     let downloadLink = document.createElement('a');
