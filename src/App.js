@@ -3,7 +3,7 @@ import * as Styled from './styles/App.styles'
 import year from './imgs/2020.svg';
 import Camera from './Camera';
 import useGlobal from './store';
-import './App.css';
+import { saveAs } from 'file-saver';
 
 function App() {
   const [globalState, globalActions] = useGlobal();
@@ -22,14 +22,10 @@ function App() {
   }, [globalState.photo])
 
   function DownloadCanvasAsImage() {
-    let downloadLink = document.createElement('a');
-    downloadLink.setAttribute('download', 'CanvasAsImage.png');
     let canvas = document.getElementById('myCanvas');
     canvas.toBlob(function (blob) {
-      let url = URL.createObjectURL(blob);
-      downloadLink.setAttribute('href', url);
-      downloadLink.click();
-    });
+    saveAs(blob, "image.png");
+    }, 'image/png');
   }
 
   return (

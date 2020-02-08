@@ -15,7 +15,7 @@ export const Camera = ({ download }) => {
   const videoConstraints = {
     facingMode: "user",
   };
-
+  // src on sticker needs to sync with background prop in app!!!
   return (
     <>
       <Styled.Camera

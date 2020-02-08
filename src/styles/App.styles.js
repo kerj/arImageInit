@@ -10,7 +10,5 @@ export const App = styled.div`
 `
 
 export const HiddenImg = styled.img`
-  transform: translate3d(-50vw, 34vh, 0px);
   display: none;
-  width: 50px;
 `
