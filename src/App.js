@@ -35,12 +35,39 @@ function App() {
   function DownloadCanvasAsImage() {
     let canvas = document.getElementById('myCanvas');
     canvas.toBlob(function (blob) {
-    saveAs(blob, "image.png");
+      saveAs(blob, "image.png");
     }, 'image/png');
   }
 
+  const DrawSticker = (source, xPos, yPos) => {
+    console.group('drawing')
+    // xPos and yPos will be based off of x/y and affect how the image.current is drawn onto the canvas
+    return <Styled.Sticker viewbox='0 0 50 50' src={source} xPos={xPos} yPos={yPos} />;
+  }
+
+  const [Sticker, setSticker] = useState(DrawSticker(stickerOfChoice.current, -500, -600))
+
+  const handleMove = (x, y) => {
+    // can move based on touch/click needs heavily refined
+    const xPos = Math.floor(x) + 'px'
+    const yPos = -Math.floor(y) + 'px'
+    console.log(xPos, yPos)
+    //
+    setSticker(DrawSticker(stickerOfChoice.current, xPos, yPos))
+  }
+
+  const handleTouch = (e) => {
+    // get the start position and get ready to move
+    handleMove(e.touches[0].clientX, e.touches[0].clientY)
+  }
+
+
+
+
   return (
-    <>
+    <Styled.App
+      // onTouchStart={e => handleTouch(e)}
+    >
       <Camera download={DownloadCanvasAsImage}>
       </Camera>
       <Styled.Canvas
