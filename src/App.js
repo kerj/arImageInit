@@ -11,12 +11,23 @@ function App() {
   // change the image will change the sticker the users sees!
   const image = useRef();
   const picFromCamera = useRef(globalState.photo);
+  const stickerOfChoice = useRef(year)
+  const w = window, 
+  d = document,
+  e = d.documentElement,
+  g = d.getElementsByTagName('body')[0],
+  x = w.innerWidth || e.clientWidth || g.clientWidth,
+  y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+  // x y are the x/y of the viewing screen
+  
 
 
   useEffect(() => {
     const ctx = canvas.current.getContext('2d')
     picFromCamera.current.onload = () => {
       ctx.drawImage(picFromCamera.current, 0, 0)
+      // 20, 120 should be set based off of x and y
       ctx.drawImage(image.current, 80, 120, 180, 240)
     }
   }, [globalState.photo])
