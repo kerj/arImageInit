@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import CameraEle from 'react-webcam'
 
 export const Snapshot = styled.button`
+    z-index: 1000;
     border-radius: 50%;
     width: 90px;
     height: 90px;
@@ -25,17 +26,11 @@ export const Snapshot = styled.button`
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     transition: all 0.3s;
+    display: flex;
+    z-index: 3;
 `
 
 export const Camera = styled(CameraEle)`
+    display: flex;
 
-`
-
-export const Sticker = styled.img`
-    position: relative;
-    height: 29em;
-    width: 173px;
-    margin-left: 22%;
-    margin-top: -157%;
-    z-index: 1000;
 `
