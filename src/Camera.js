@@ -1,7 +1,8 @@
-import React, { useRef, useCallback } from 'react'
-import useGlobal from './store'
-import year from './imgs/2020.svg';
-import * as Styled from './styles/Camera.styles'
+import React, { useRef, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import useGlobal from './store';
+
+import * as Styled from './styles/Camera.styles';
 
 export const Camera = ({ download }) => {
   const [globalState, globalActions] = useGlobal();
@@ -19,17 +20,23 @@ export const Camera = ({ download }) => {
   return (
     <>
       <Styled.Camera
-        id='hiddenPreview'
         audio={false}
         ref={camRef}
+        mirrored={true}
+        height={480}
+        width={640}
         videoConstraints={videoConstraints}
       >
       </Styled.Camera>
-      <Styled.Sticker src={year} id='sticker'></Styled.Sticker>
-      <Styled.Snapshot onClick={capture}>Take Photo</Styled.Snapshot>
-      <Styled.Snapshot onClick={download}>Download</Styled.Snapshot>
+      <Styled.Snapshot onPointerDown={capture}>Take Photo</Styled.Snapshot>
+      <Styled.Snapshot onPointerDown={download}>Download</Styled.Snapshot>
     </>
   )
+}
+
+Camera.propTypes = {
+  download: PropTypes.func,
+  sticker: PropTypes.object,
 }
 
 export default Camera;
