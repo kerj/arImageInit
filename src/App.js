@@ -78,9 +78,10 @@ function App() {
         ref={canvas}
       >
       </Styled.Canvas>
+      {Sticker}
       <Styled.HiddenImg src={year} alt="logo" ref={image} />
       <Styled.HiddenImg src={globalState.photo} ref={picFromCamera} />
-    </>
+    </Styled.App>
   );
 }
 
