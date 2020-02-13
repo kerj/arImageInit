@@ -14,6 +14,8 @@ export const Camera = ({ download }) => {
   }, [])
 
   const videoConstraints = {
+    height: 640,
+    width: 480,
     facingMode: "user",
   };
   // src on sticker needs to sync with background prop in app!!!
@@ -23,8 +25,8 @@ export const Camera = ({ download }) => {
         audio={false}
         ref={camRef}
         mirrored={true}
-        height={480}
-        width={640}
+        height={640}
+        width={480}
         videoConstraints={videoConstraints}
       >
       </Styled.Camera>

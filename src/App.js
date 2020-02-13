@@ -72,8 +72,8 @@ function App() {
       </Camera>
       <Styled.Canvas
         id='myCanvas'
-        height={480}
-        width={640}
+        height={640}
+        width={480}
         background={year}
         ref={canvas}
       >
