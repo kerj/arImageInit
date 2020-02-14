@@ -30,6 +30,11 @@ export const Snapshot = styled.button`
 `
 
 export const Camera = styled(CameraEle)`
-    
+    background: #222;
+    margin: 0 0 20px 0;
+    --width: 100%;
+    width: var(--width);
+    height: calc(var(--width) * 0.75);
+    max-width: max-content;
 
 `

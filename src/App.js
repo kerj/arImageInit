@@ -8,7 +8,6 @@ import { saveAs } from 'file-saver';
 function App() {
   const [globalState, globalActions] = useGlobal();
   const canvas = useRef();
-  const video = useRef();
   // change the image will change the sticker the users sees!
   const image = useRef();
   const picFromCamera = useRef(globalState.photo);
@@ -25,31 +24,17 @@ function App() {
     y = w.innerHeight || e.clientHeight || g.clientHeight;
 
   const handleMove = (newX, newY) => {
+
     stickerPos.current[0] = newX;
     stickerPos.current[1] = newY;
+    console.log(stickerPos)
     setSticker(DrawSticker(stickerOfChoice.current, stickerPos.current[0], stickerPos.current[1]))
   }
 
   const handleTouch = (e) => {
     handleMove(e.touches[0].clientX, e.touches[0].clientY)
-
+    console.log(e.touches[0].clientX, e.touches[0].clientY)
   }
-
-  useEffect(() => {
-
-    const constraints = {
-      audio:false,
-      video: true,
-    }
-    const handleSuccess = (stream) => {
-      window.stream = stream;
-      video.current.srcObject = stream;
-    }
-    const handleError = (error) => {
-      console.log('navigator.mediaDevice.getUserMedia error: ' , error.message, error.name);
-    }
-    navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError)
-  }, [])
 
   useEffect(() => {
     console.log('photo taken')
@@ -72,13 +57,6 @@ function App() {
     }, 'image/png');
   }
 
-  const capture = () => {
-      canvas.current.width = video.current.videoWidth;
-      canvas.current.height = video.current.videoHeight;
-      canvas.current.getContext('2d').drawImage(video.current, 0, 0, canvas.current.width, canvas.current.height);
-      canvas.current.getContext('2d').drawImage(image.current, 0, 0, 180,240)
-
-  }
 
   const DrawSticker = (source, xPos, yPos, stickerRef) => {
     return <Styled.Sticker ref={stickerRef} viewbox='0 0 50 50' src={source} xPos={xPos} yPos={yPos} />;
@@ -92,8 +70,10 @@ function App() {
         onTouchStart={handleTouch}
       >
       </Styled.TouchArea>
-      <Styled.Video ref={video} playsInline autoPlay></Styled.Video>
-      <Styled.Snapshot onPointerDown={capture}>Take Photo</Styled.Snapshot>
+      <Camera
+        download={DownloadCanvasAsImage}
+      >
+      </Camera>
       <Styled.Canvas
         id='myCanvas'
         height={640}
