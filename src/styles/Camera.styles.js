@@ -26,7 +26,7 @@ export const Snapshot = styled.button`
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     transition: all 0.3s;
-    z-index: 3;
+    z-index: 10;
 `
 
 export const Camera = styled(CameraEle)`

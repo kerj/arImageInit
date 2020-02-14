@@ -8,6 +8,7 @@
 # testing
 /coverage
 
+/constants/firebaseConfig
 # production
 /build
 

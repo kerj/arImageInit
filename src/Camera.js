@@ -4,7 +4,7 @@ import useGlobal from './store';
 
 import * as Styled from './styles/Camera.styles';
 
-export const Camera = ({ download }) => {
+export const Camera = ({ download, height, width }) => {
   const [globalState, globalActions] = useGlobal();
   const camRef = useRef(null)
 
@@ -25,8 +25,8 @@ export const Camera = ({ download }) => {
         audio={false}
         ref={camRef}
         mirrored={true}
-        height={640}
-        width={480}
+        height={height}
+        width={width}
         videoConstraints={videoConstraints}
       >
       </Styled.Camera>
@@ -38,7 +38,8 @@ export const Camera = ({ download }) => {
 
 Camera.propTypes = {
   download: PropTypes.func,
-  sticker: PropTypes.object,
+  height: PropTypes.number,
+  width: PropTypes.number,
 }
 
 export default Camera;

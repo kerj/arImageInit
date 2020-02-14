@@ -8,27 +8,60 @@ import { saveAs } from 'file-saver';
 function App() {
   const [globalState, globalActions] = useGlobal();
   const canvas = useRef();
+  const video = useRef();
   // change the image will change the sticker the users sees!
   const image = useRef();
   const picFromCamera = useRef(globalState.photo);
   const stickerOfChoice = useRef(year)
-  const w = window, 
-  d = document,
-  e = d.documentElement,
-  g = d.getElementsByTagName('body')[0],
-  x = w.innerWidth || e.clientWidth || g.clientWidth,
-  y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+  const stickerPos = useRef([0, 0])
+  const stickerElement = useRef()
 
-  // x y are the x/y of the viewing screen
-  
 
+  const w = window,
+    d = document,
+    e = d.documentElement,
+    g = d.getElementsByTagName('body')[0],
+    x = w.innerWidth || e.clientWidth || g.clientWidth,
+    y = w.innerHeight || e.clientHeight || g.clientHeight;
+
+  const handleMove = (newX, newY) => {
+    stickerPos.current[0] = newX;
+    stickerPos.current[1] = newY;
+    setSticker(DrawSticker(stickerOfChoice.current, stickerPos.current[0], stickerPos.current[1]))
+  }
+
+  const handleTouch = (e) => {
+    handleMove(e.touches[0].clientX, e.touches[0].clientY)
+
+  }
 
   useEffect(() => {
+
+    const constraints = {
+      audio:false,
+      video: true,
+    }
+    const handleSuccess = (stream) => {
+      window.stream = stream;
+      video.current.srcObject = stream;
+    }
+    const handleError = (error) => {
+      console.log('navigator.mediaDevice.getUserMedia error: ' , error.message, error.name);
+    }
+    navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError)
+  }, [])
+
+  useEffect(() => {
+    console.log('photo taken')
     const ctx = canvas.current.getContext('2d')
+    console.log(canvas.current)
     picFromCamera.current.onload = () => {
-      ctx.drawImage(picFromCamera.current, 0, 0)
-      // 20, 120 should be set based off of x and y
-      ctx.drawImage(image.current, 80, 120, 180, 240)
+      ctx.drawImage(picFromCamera.current, 0, 0, canvas.current.width, canvas.current.height)
+      ctx.drawImage(image.current, stickerPos.current[0], stickerPos.current[1], 180, 240)
+    }
+    return () => {
+      picFromCamera.current.onload = () => {
+      }
     }
   }, [globalState.photo])
 
@@ -39,37 +72,28 @@ function App() {
     }, 'image/png');
   }
 
-  const DrawSticker = (source, xPos, yPos) => {
-    console.group('drawing')
-    // xPos and yPos will be based off of x/y and affect how the image.current is drawn onto the canvas
-    return <Styled.Sticker viewbox='0 0 50 50' src={source} xPos={xPos} yPos={yPos} />;
+  const capture = () => {
+      canvas.current.width = video.current.videoWidth;
+      canvas.current.height = video.current.videoHeight;
+      canvas.current.getContext('2d').drawImage(video.current, 0, 0, canvas.current.width, canvas.current.height);
+      canvas.current.getContext('2d').drawImage(image.current, 0, 0, 180,240)
+
   }
 
-  const [Sticker, setSticker] = useState(DrawSticker(stickerOfChoice.current, -500, -600))
-
-  const handleMove = (x, y) => {
-    // can move based on touch/click needs heavily refined
-    const xPos = Math.floor(x) + 'px'
-    const yPos = -Math.floor(y) + 'px'
-    console.log(xPos, yPos)
-    //
-    setSticker(DrawSticker(stickerOfChoice.current, xPos, yPos))
+  const DrawSticker = (source, xPos, yPos, stickerRef) => {
+    return <Styled.Sticker ref={stickerRef} viewbox='0 0 50 50' src={source} xPos={xPos} yPos={yPos} />;
   }
 
-  const handleTouch = (e) => {
-    // get the start position and get ready to move
-    handleMove(e.touches[0].clientX, e.touches[0].clientY)
-  }
-
-
-
+  const [Sticker, setSticker] = useState(DrawSticker(stickerOfChoice.current, stickerPos.current[0], stickerPos.current[1], stickerElement))
 
   return (
-    <Styled.App
-      // onTouchStart={e => handleTouch(e)}
-    >
-      <Camera download={DownloadCanvasAsImage}>
-      </Camera>
+    <Styled.App>
+      <Styled.TouchArea
+        onTouchStart={handleTouch}
+      >
+      </Styled.TouchArea>
+      <Styled.Video ref={video} playsInline autoPlay></Styled.Video>
+      <Styled.Snapshot onPointerDown={capture}>Take Photo</Styled.Snapshot>
       <Styled.Canvas
         id='myCanvas'
         height={640}
