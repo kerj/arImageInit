@@ -4,7 +4,7 @@ import useGlobal from './store';
 
 import * as Styled from './styles/Camera.styles';
 
-export const Camera = ({ download, height, width }) => {
+export const Camera = ({ download }) => {
   const [globalState, globalActions] = useGlobal();
   const camRef = useRef(null)
 
@@ -14,8 +14,8 @@ export const Camera = ({ download, height, width }) => {
   }, [])
 
   const videoConstraints = {
-    height: 640,
-    width: 480,
+    height: { min: 480, ideal: 720, max: 1920 },
+    width: { min: 640, ideal: 900, max: 1080},
     facingMode: "user",
   };
   // src on sticker needs to sync with background prop in app!!!
@@ -24,10 +24,9 @@ export const Camera = ({ download, height, width }) => {
       <Styled.Camera
         audio={false}
         ref={camRef}
-        mirrored={true}
-        height={height}
-        width={width}
+        mirrored={true}  
         videoConstraints={videoConstraints}
+    
       >
       </Styled.Camera>
       <Styled.Snapshot onPointerDown={capture}>Take Photo</Styled.Snapshot>

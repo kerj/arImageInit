@@ -5,7 +5,6 @@ export const Canvas = styled.canvas`
   background-color: #ccc;
   max-width: max-content;
   width: 100%;
-
 `
 
 export const App = styled.div`
@@ -18,7 +17,7 @@ export const HiddenImg = styled.img`
 
 export const Sticker = styled.img`
   position: absolute;
-  width: 173px;
+  width: 150px;
   top: ${props => props.yPos + 'px'};
   left: ${props => props.xPos + 'px'};
 `

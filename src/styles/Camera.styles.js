@@ -36,5 +36,4 @@ export const Camera = styled(CameraEle)`
     width: var(--width);
     height: calc(var(--width) * 0.75);
     max-width: max-content;
-
 `
