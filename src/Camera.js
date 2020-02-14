@@ -30,8 +30,8 @@ export const Camera = ({ download }) => {
         videoConstraints={videoConstraints}
       >
       </Styled.Camera>
-      <Styled.Snapshot onPointerDown={capture}>Take Photo</Styled.Snapshot>
-      <Styled.Snapshot onPointerDown={download}>Download</Styled.Snapshot>
+      <Styled.Snapshot onClick={capture}>Take Photo</Styled.Snapshot>
+      <Styled.Snapshot onClick={download}>Download</Styled.Snapshot>
     </>
   )
 }
