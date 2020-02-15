@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as Styled from './styles/App.styles'
 import year from './imgs/2020.svg';
+import logo from './imgs/react.svg';
 import Camera from './Camera';
 import useGlobal from './store';
 import { saveAs } from 'file-saver';
@@ -50,16 +51,17 @@ function App() {
     console.log('photo taken')
     const ctx = canvas.current.getContext('2d')
     console.log(canvas.current)
-    // need camera width and height
     // can set video width and height via video.videoWidth 
     if (camPreview.current === null) return
 
     console.log(canvas.current)
+    console.log(image.current.width, image.current.naturalWidth)
+    // try passing props for an image to use for these, then set them is css that way.. or? 
+    // currently removes all scaling from the sticker and draws its native size, no good.
     const stickerDims = {
-      width: camPreview.current.videoWidth * 150 / 320,
-      height: camPreview.current.videoHeight * 212 / 240,
+      width: image.current.width,
+      height: image.current.height
     }
-    
     canvas.current.width = camPreview.current.videoWidth;
     canvas.current.height = camPreview.current.videoHeight;
 
@@ -82,12 +84,18 @@ function App() {
     }, 'image/png');
   }
 
+ 
 
   const DrawSticker = (source, xPos, yPos, stickerRef) => {
     return <Styled.Sticker ref={stickerRef} viewbox='0 0 50 50' src={source} xPos={xPos} yPos={yPos} />;
   }
 
   const [Sticker, setSticker] = useState(DrawSticker(stickerOfChoice.current, stickerPos.current[0], stickerPos.current[1], stickerElement))
+
+  const cycleSticker = () => {
+    stickerOfChoice.current = `${logo}`
+    setSticker(DrawSticker(stickerOfChoice.current, stickerPos.current[0], stickerPos.current[1], stickerElement))
+  }
 
   return (
     <Styled.App>
@@ -100,16 +108,17 @@ function App() {
         download={DownloadCanvasAsImage}
       >
       </Camera>
+      <Styled.Snapshot onClick={() => {cycleSticker()}}>Cycle Image</Styled.Snapshot>
       <Styled.Canvas
         id='myCanvas'
-        background={year}
+        background={stickerOfChoice.current}
         ref={canvas}
         width={480}
         height={640}
       >
       </Styled.Canvas>
       {Sticker}
-      <Styled.HiddenImg src={year} alt="logo" ref={image} />
+      <Styled.HiddenImg src={stickerOfChoice.current} alt="logo" ref={image} />
       <Styled.HiddenImg src={globalState.photo} ref={picFromCamera} />
     </Styled.App>
   );

@@ -14,8 +14,8 @@ export const Camera = ({ download }) => {
   }, [])
 
   const videoConstraints = {
-    height: { min: 480, ideal: 720, max: 1920 },
-    width: { min: 640, ideal: 900, max: 1080},
+    height: { min: 480, ideal: 480, max: 1920 },
+    width: { min: 640, ideal: 640, max: 1080},
     facingMode: "user",
   };
   // src on sticker needs to sync with background prop in app!!!
@@ -29,8 +29,8 @@ export const Camera = ({ download }) => {
     
       >
       </Styled.Camera>
-      <Styled.Snapshot onPointerDown={capture}>Take Photo</Styled.Snapshot>
-      <Styled.Snapshot onPointerDown={download}>Download</Styled.Snapshot>
+      <Styled.Snapshot onClick={capture}>Take Photo</Styled.Snapshot>
+      <Styled.Snapshot onClick={download}>Download</Styled.Snapshot>
     </>
   )
 }
