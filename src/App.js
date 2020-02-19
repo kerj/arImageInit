@@ -12,7 +12,7 @@ function App() {
   const image = useRef();
   const picFromCamera = useRef(globalState.photo);
   const stickerOfChoice = useRef(year)
-  const w = window, 
+  const w = window,
   d = document,
   e = d.documentElement,
   g = d.getElementsByTagName('body')[0],
@@ -20,7 +20,7 @@ function App() {
   y = w.innerHeight|| e.clientHeight|| g.clientHeight;
 
   // x y are the x/y of the viewing screen
-  
+
 
 
   useEffect(() => {
@@ -72,8 +72,6 @@ function App() {
       </Camera>
       <Styled.Canvas
         id='myCanvas'
-        height={640}
-        width={480}
         background={year}
         ref={canvas}
       >
