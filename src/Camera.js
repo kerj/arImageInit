@@ -1,44 +1,39 @@
-import React, { useRef, useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import useGlobal from './store';
 
 import * as Styled from './styles/Camera.styles';
 
-export const Camera = ({ download }) => {
-  const [globalState, globalActions] = useGlobal();
-  const camRef = useRef(null)
-
-  const capture = useCallback(() => {
-    const imageSrc = camRef.current.getScreenshot();
-    globalActions.getPhoto(imageSrc);
-  }, [])
+export const Camera = React.forwardRef(({ download, onUserMedia, onUserMediaError }, ref) => {
 
   const videoConstraints = {
-    height: 640,
-    width: 480,
     facingMode: "user",
+    width: { min: 480, ideal: 1920, max: 5000 },
+    height: { min: 640, ideal: 1080, max: 5000}
   };
   // src on sticker needs to sync with background prop in app!!!
   return (
     <>
       <Styled.Camera
         audio={false}
-        ref={camRef}
+        ref={ref}
         mirrored={true}
-        height={640}
-        width={480}
         videoConstraints={videoConstraints}
+        forceScreenshotSourceSize={true}
+        onUserMedia={onUserMedia}
+        onUserMediaError={onUserMediaError}
+        screenshotQuality={1}
       >
       </Styled.Camera>
-      <Styled.Snapshot onPointerDown={capture}>Take Photo</Styled.Snapshot>
-      <Styled.Snapshot onPointerDown={download}>Download</Styled.Snapshot>
     </>
   )
-}
+})
 
 Camera.propTypes = {
   download: PropTypes.func,
-  sticker: PropTypes.object,
+  height: PropTypes.number,
+  width: PropTypes.number,
+  onUserMedia: PropTypes.func,
+  onUserMediaError: PropTypes.func,
 }
 
 export default Camera;

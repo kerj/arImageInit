@@ -1,86 +1,100 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, {useRef, useEffect, useState, useCallback} from 'react';
 import * as Styled from './styles/App.styles'
-import year from './imgs/2020.svg';
-import Camera from './Camera';
 import useGlobal from './store';
 import { saveAs } from 'file-saver';
+import PhotoDownload from './PhotoDownload';
+import Preview from './Preview'
+import superman from './imgs/selfie_superman.png'
+import batman from './imgs/batman.png'
+import count from './imgs/count.png'
+import daffy from './imgs/daffy.png'
+import landy from './imgs/lando.png'
+import stange from './imgs/strange.png'
+
+const stickerImages = [
+  batman,
+  count,
+  daffy,
+  landy,
+  stange,
+  superman
+];
 
 function App() {
   const [globalState, globalActions] = useGlobal();
-  const canvas = useRef();
+  const stickerElement = useRef()
+  const [stickerPos, setStickerPos] = useState([0, 0])
   // change the image will change the sticker the users sees!
   const image = useRef();
   const picFromCamera = useRef(globalState.photo);
-  const stickerOfChoice = useRef(year)
-  const w = window, 
-  d = document,
-  e = d.documentElement,
-  g = d.getElementsByTagName('body')[0],
-  x = w.innerWidth || e.clientWidth || g.clientWidth,
-  y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+  const [stickerImage, setStickerImage] = useState(stickerImages[0])
+  const camPreview = useRef()
+  const camRef = useRef(null)
+  // TODO: Use this in some way to provide a friendly error message.
+  const [error, setError] = useState(false)
 
-  // x y are the x/y of the viewing screen
-  
-
+  const [videoDims, setVideoDims] = useState(['???', '???'])
 
   useEffect(() => {
-    const ctx = canvas.current.getContext('2d')
-    picFromCamera.current.onload = () => {
-      ctx.drawImage(picFromCamera.current, 0, 0)
-      // 20, 120 should be set based off of x and y
-      ctx.drawImage(image.current, 80, 120, 180, 240)
+    if (document.getElementsByTagName('video') === null ) return
+    document.getElementsByTagName('video')[0].addEventListener('play', () => {
+      setVideoDims([document.getElementsByTagName('video')[0].videoWidth, document.getElementsByTagName('video')[0].videoHeight])
+    })
+  },[])
+
+  const getPreview = () => {
+    camPreview.current = document.querySelector('video');
+  }
+
+  useEffect(() => {
+    getPreview()
+  })
+
+  // Used for debug cycling or images
+  const [currentImg, setCurrentImg] = useState(0)
+  const cycleSticker = () => {
+    let next = currentImg + 1;
+    if (next >= stickerImages.length) {
+      next = 0
     }
-  }, [globalState.photo])
-
-  function DownloadCanvasAsImage() {
-    let canvas = document.getElementById('myCanvas');
-    canvas.toBlob(function (blob) {
-      saveAs(blob, "image.png");
-    }, 'image/png');
+    setCurrentImg(next)
   }
+  useEffect(() => {
+    setStickerImage(stickerImages[currentImg])
+  }, [currentImg])
 
-  const DrawSticker = (source, xPos, yPos) => {
-    console.group('drawing')
-    // xPos and yPos will be based off of x/y and affect how the image.current is drawn onto the canvas
-    return <Styled.Sticker viewbox='0 0 50 50' src={source} xPos={xPos} yPos={yPos} />;
-  }
-
-  const [Sticker, setSticker] = useState(DrawSticker(stickerOfChoice.current, -500, -600))
-
-  const handleMove = (x, y) => {
-    // can move based on touch/click needs heavily refined
-    const xPos = Math.floor(x) + 'px'
-    const yPos = -Math.floor(y) + 'px'
-    console.log(xPos, yPos)
-    //
-    setSticker(DrawSticker(stickerOfChoice.current, xPos, yPos))
-  }
-
-  const handleTouch = (e) => {
-    // get the start position and get ready to move
-    handleMove(e.touches[0].clientX, e.touches[0].clientY)
-  }
-
-
-
+  const capture = useCallback(() => {
+    const imageSrc = camRef.current.getScreenshot();
+    globalActions.getPhoto(imageSrc);
+    globalActions.setMode('viewPhoto');
+  }, [globalActions])
 
   return (
-    <Styled.App
-      // onTouchStart={e => handleTouch(e)}
-    >
-      <Camera download={DownloadCanvasAsImage}>
-      </Camera>
-      <Styled.Canvas
-        id='myCanvas'
-        height={640}
-        width={480}
-        background={year}
-        ref={canvas}
-      >
-      </Styled.Canvas>
-      {Sticker}
-      <Styled.HiddenImg src={year} alt="logo" ref={image} />
-      <Styled.HiddenImg src={globalState.photo} ref={picFromCamera} />
+    <Styled.App>
+      {
+        globalState.activeMode === 'viewPhoto' &&
+        <PhotoDownload activeCam={camPreview} setVideo={videoDims} img={image} stickerXY={stickerPos} sticker={stickerImage} stickerRef={stickerElement}/>
+      }
+      {
+        globalState.activeMode === 'takePhoto' &&
+        <>
+          <div>Video W: ${videoDims[0]} H:{videoDims[1]}</div>
+          <Preview
+            ref={camRef}
+            imageRef={image}
+            stickerImage={stickerImage}
+            stickerRef={stickerElement}
+            reportStickerPos={setStickerPos}
+            setError={setError}
+          />
+          <Styled.Actions>
+            <Styled.Snapshot onClick={capture}>Take Photo</Styled.Snapshot>
+            <Styled.Snapshot onClick={() => {cycleSticker()}}>Cycle Image</Styled.Snapshot>
+            <Styled.HiddenImg id='fromCamera' src={globalState.photo} ref={picFromCamera} />
+          </Styled.Actions>
+        </>
+      }
+     
     </Styled.App>
   );
 }
