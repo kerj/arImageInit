@@ -56,7 +56,7 @@ function App({ stickerChoice }) {
     // cleanup after yourself, create a listener, remove it
     return () => {
       video.removeEventListener('play', playListener)
-  }
+    }
     // everytime user changes orientation of device- reset the dims
   }, [currentOrientation])
 
@@ -97,7 +97,7 @@ function App({ stickerChoice }) {
       onOrientationChange={(orientation, type, angle) => {
         setOrientation(orientation)
       }}
-      >
+    >
       <Orientation orientation='portrait' alwaysRender={false}>
         <Styled.App>
           {
@@ -133,7 +133,7 @@ function App({ stickerChoice }) {
               </Styled.Actions>
             </>
           }
-    </Styled.App>
+        </Styled.App>
       </Orientation>
       <Orientation orientation='landscape' alwaysRender={false}>
         <Styled.RotationWarning>
