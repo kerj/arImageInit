@@ -14,6 +14,7 @@ export const RotationWarning = styled.div`
   height: 100vh;
   align-content: center;
   justify-content: center;
+  color: whitesmoke;
 `
 
 export const HiddenImg = styled.img`

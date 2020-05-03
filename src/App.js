@@ -137,7 +137,7 @@ function App({ stickerChoice }) {
       </Orientation>
       <Orientation orientation='landscape' alwaysRender={false}>
         <Styled.RotationWarning>
-          <p>Please rotate your device</p>
+          <p>Please open with a mobile device, or rotate the device!</p>
         </Styled.RotationWarning>
       </Orientation>
     </DeviceOrientation>
